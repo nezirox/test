@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Паразитология - интерактивный опросник</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6d9 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1e4a3a, #0d2e23);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .stats-panel {
+            background: white;
+            border-radius: 60px;
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .progress-info {
+            font-weight: 600;
+            color: #1e4a3a;
+        }
+
+        .reset-btn {
+            background: #f5a623;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: #e09515;
+            transform: scale(0.97);
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: 0.2s;
+        }
+
+        .card-header {
+            background: #2a5a3e;
+            color: white;
+            padding: 18px 24px;
+        }
+
+        .card-header h2 {
+            font-size: 1.3rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .taxonomy {
+            font-size: 0.7rem;
+            background: #3f785b;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-family: monospace;
+        }
+
+        .question-area {
+            padding: 24px;
+        }
+
+        .question-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #1a3a2a;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: #f9fdfb;
+            padding: 12px 18px;
+            border-radius: 24px;
+            border: 1px solid #d4e6dc;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .option:hover {
+            background: #e8f3ed;
+            border-color: #88b8a0;
+        }
+
+        input[type="radio"] {
+            margin-top: 3px;
+            accent-color: #2d784e;
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn-submit {
+            background: #2d784e;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 10px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #1e5a3b;
+        }
+
+        .feedback {
+            margin-top: 18px;
+            padding: 16px 20px;
+            border-radius: 24px;
+            background: #f4fbf7;
+            border-left: 5px solid #2d784e;
+        }
+
+        .correct-feedback {
+            background: #e0f5e8;
+            border-left-color: #13855e;
+        }
+
+        .wrong-feedback {
+            background: #ffeae2;
+            border-left-color: #c94f2c;
+        }
+
+        .info-block {
+            background: #fef6e0;
+            padding: 16px 22px;
+            border-top: 1px solid #f0e4c0;
+            font-size: 0.9rem;
+            line-height: 1.45;
+        }
+
+        .info-title {
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: flex;
+            gap: 8px;
+        }
+
+        hr {
+            margin: 12px 0;
+            border-color: #e8dcb0;
+        }
+
+        footer {
+            text-align: center;
+            margin: 40px 0 20px;
+            color: #4a6b5c;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 650px) {
+            .hero h1 { font-size: 1.5rem; }
+            .card-header h2 { flex-direction: column; }
+            .question-text { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🪱 Паразитология: проверь себя</h1>
+        <p>45 объектов. Выберите ответ → узнайте жизненный цикл и профилактику</p>
+    </div>
+    <div class="stats-panel" id="stats-panel">
+        <span class="progress-info" id="progress-text">📊 Пройдено: 0 из 45</span>
+        <button class="reset-btn" id="reset-btn">🔄 Сбросить все ответы</button>
+    </div>
+    <div id="quiz-container"></div>
+    <footer>📚 Учебный атлас по систематике, эпидемиологии и циклам развития</footer>
+</div>
+
+<script>
+    // =========== БАЗА ДАННЫХ (45 объектов) ===========
+    const parasitesData = [
+        { id:1, title:"Печеночный сосальщик (половая система)", taxonomy:"Plathelminthes, Trematoda, Fasciola hepatica", question:"Каков основной путь заражения фасциолезом?", options:["Через укус комара","С немытыми овощами и сырой водой (адолескарии)","При контакте с больным","Сырая свинина"], correct:1, explanation:"Возбудитель фасциолеза. Адолескарии на растениях и в воде.", lifecycle:"Яйцо → мирацидий → прудовик → спороциста → редии → церкарии → адолескария → заглатывание.", prevention:"Кипятить воду, мыть зелень, не пить из стоячих водоёмов." },
+        { id:2, title:"Печеночный сосальщик (пищеварительная система)", taxonomy:"Fasciola hepatica", question:"Как лабораторно подтверждают фасциолез?", options:["ПЦР крови","Обнаружение яиц в фекалиях","Кожная проба","Рентген"], correct:1, explanation:"Обнаружение яиц Fasciola hepatica в кале.", lifecycle:"Цикл с двумя хозяевами: моллюск и позвоночное.", prevention:"Термическая обработка водных растений." },
+        { id:3, title:"Печеночный сосальщик (выделительная система)", taxonomy:"Fasciola hepatica", question:"Что из перечисленного — правильная мера профилактики фасциолеза?", options:["Вакцинация","Исключение сырой рыбы","Мытьё зелени и кипячение воды","Ношение репеллентов"], correct:2, explanation:"Фасциолез — алиментарный, через растения и воду.", lifecycle:"Выделительная система протонефридиального типа.", prevention:"Не употреблять некипячёную воду из прудов." },
+        { id:4, title:"Кошачий сосальщик (Opisthorchis felineus)", taxonomy:"Opisthorchiidae", question:"Как заражаются описторхозом?", options:["Укус клеща","Сырая/полусырая рыба (карповые)","Немытые фрукты","Воздушно-капельно"], correct:1, explanation:"Метацеркарии в рыбе семейства карповых.", lifecycle:"Моллюск → рыба (язь, плотва) → человек.", prevention:"Хорошая термическая обработка рыбы." },
+        { id:5, title:"Ланцетовидный сосальщик (Dicrocoelium lanceatum)", taxonomy:"Dicrocoeliidae", question:"Каким путем человек заражается дикроцелиозом?", options:["Через муравьёв (случайно с травой)","Через кровь","С водой","От комара"], correct:0, explanation:"Муравьи — второй промежуточный хозяин.", lifecycle:"Яйца → моллюск → церкарии → муравей → окончательный хозяин.", prevention:"Избегать проглатывания насекомых с дикой травой." },
+        { id:6, title:"Широкий лентец (зрелый членик)", taxonomy:"Diphyllobothrium latum", question:"Как предотвратить дифиллоботриоз?", options:["Термическая обработка рыбы, отказ от сырой икры щуки","Вакцинация","Мытьё рук","Дератизация"], correct:0, explanation:"Плероцеркоиды в рыбе.", lifecycle:"Корацидий → циклоп → рыба → человек.", prevention:"Проварка, просолка рыбы." },
+        { id:7, title:"Сколекс широкого лентеца", taxonomy:"Diphyllobothriidae", question:"Какой диагностический признак дифиллоботриоза?", options:["Зуд в перианальной области","Яйца с крышечкой в фекалиях","Обнаружение члеников","Анемия"], correct:1, explanation:"Яйца крупные, овальные, с крышечкой.", lifecycle:"Два промежуточных хозяина.", prevention:"Не есть сырую речную рыбу." },
+        { id:8, title:"Гермафродитный членик бычьего цепня", taxonomy:"Taenia saginata", question:"Как заражаются тениаринхозом?", options:["Сырая говядина с финнами","Свинина","Рыба","Вода"], correct:0, explanation:"Цистицерки в мышцах КРС.", lifecycle:"КРС → финна → человек → членики.", prevention:"Ветеринарный контроль мяса." },
+        { id:9, title:"Поперечный срез бычьего цепня", taxonomy:"Taenia saginata", question:"Что характерно для тениаринхоза?", options:["Кашель","Выползание члеников","Желтуха","Лихорадка"], correct:1, explanation:"Проглоттиды активно выползают из ануса.", lifecycle:"Цистицерки в мышцах.", prevention:"Прожарка говядины." },
+        { id:10, title:"Зрелый членик бычьего цепня", taxonomy:"Taenia saginata", question:"Сколько боковых ответвлений у матки в зрелом членике?", options:["7-14","17-34","40-50","5-8"], correct:1, explanation:"Характерный признак: 17-34 ответвлений.", lifecycle:"Как у Taenia saginata.", prevention:"Термическая обработка." },
+        { id:11, title:"Зрелый членик свиного цепня", taxonomy:"Taenia solium", question:"Какое заболевание вызывает свиной цепень?", options:["Дифиллоботриоз","Тениоз и цистицеркоз","Эхинококкоз","Трихинеллёз"], correct:1, explanation:"Опасен цистицеркозом для человека.", lifecycle:"Свинья → цистицерки → человек.", prevention:"Термическая обработка свинины." },
+        { id:12, title:"Финна бычьего/свиного цепня", taxonomy:"Taeniidae", question:"Что такое финна (цистицерк)?", options:["Взрослый червь","Пузырчатая стадия с ввёрнутым сколексом","Яйцо","Личинка с ресничками"], correct:1, explanation:"Инвазионная стадия для окончательного хозяина.", lifecycle:"Финна в мышцах → заглатывание → цепень.", prevention:"Проверка мяса." },
+        { id:13, title:"Карликовый цепень (Hymenolepis nana)", taxonomy:"Hymenolepididae", question:"Каков механизм заражения карликовым цепнем?", options:["Через рыбу","Через комаров","Яйца с загрязнённых рук","Трансмиссивно"], correct:2, explanation:"Гименолепидоз — контактно-бытовой путь.", lifecycle:"Яйца → онкосфера → цистицеркоид → кишечник.", prevention:"Мытьё рук." },
+        { id:14, title:"Тыквовидный цепень (Dipylidium caninum)", taxonomy:"Dipylidiidae", question:"Как человек заражается дипилидиозом?", options:["С говядиной","Через блох и власоедов","С молоком","Воздушно"], correct:1, explanation:"Блохи — промежуточные хозяева.", lifecycle:"Яйца → блоха → цистицеркоид → человек.", prevention:"Борьба с блохами у животных." },
+        { id:15, title:"Острица детская (Enterobius vermicularis)", taxonomy:"Oxyuridae", question:"Каков главный симптом энтеробиоза?", options:["Лихорадка","Перианальный зуд","Диарея","Анемия"], correct:1, explanation:"Самки выползают ночью, откладывают яйца.", lifecycle:"Яйца → ЖКТ → имаго → перианальные складки.", prevention:"Гигиена, смена белья." },
+        { id:16, title:"Личинка трихинеллы в мышцах", taxonomy:"Trichinella spiralis", question:"Какой путь заражения трихинеллёзом?", options:["Рыба","Сырая свинина, мясо диких животных","Вода","Контакт"], correct:1, explanation:"Личинки в капсулах мышц.", lifecycle:"Миграция → мышцы → капсулы.", prevention:"Термическая обработка свинины." },
+        { id:17, title:"Некатор (Necator americanus)", taxonomy:"Ancylostomatidae", question:"Как проникает некатор в организм?", options:["Через рот","Активно через кожу","Трансмиссивно","С молоком"], correct:1, explanation:"Филяриевидные личинки через кожу стоп.", lifecycle:"Яйца в почву → личинки → через кожу.", prevention:"Обувь, санитария." },
+        { id:18, title:"Пиявка медицинская (Hirudo medicinalis)", taxonomy:"Hirudinea", question:"Где используют медицинских пиявок?", options:["При отравлениях","Микрохирургия, варикоз","Малярия","Аллергии"], correct:1, explanation:"Снятие венозного застоя.", lifecycle:"Гермафродиты, перекрёстное оплодотворение.", prevention:"Стерильные пиявки в медицине." },
+        { id:19, title:"Яйцо тенеид (бычий/свиной цепень)", taxonomy:"Taeniidae", question:"Какую форму имеет яйцо тенеид?", options:["Овальное с крышечкой","Шаровидное с радиальной исчерченностью и онкосферой","С шипами","Цепочкой"], correct:1, explanation:"Внутри онкосфера с крючьями.", lifecycle:"Яйцо → финна у промежуточного хозяина.", prevention:"Охрана пастбищ." },
+        { id:20, title:"Яйцо кошачьего сосальщика", taxonomy:"Opisthorchis felineus", question:"Какой цвет и форма яйца описторхиса?", options:["Коричневое, круглое","Бледно-желтоватое, 26-32 мкм, суженный верхний полюс","Прозрачное","Огромное"], correct:1, explanation:"Мелкие яйца с крышечкой.", lifecycle:"Моллюск → рыба.", prevention:"Не есть сырую рыбу." },
+        { id:21, title:"Яйцо широкого лентеца", taxonomy:"Diphyllobothrium latum", question:"Размеры яиц широкого лентеца", options:["30х20 мкм","68-75х45-50 мкм, крышечка","100х60","50х30"], correct:1, explanation:"Яйца желтоватые, с крышечкой.", lifecycle:"Корацидий с ресничками.", prevention:"Термообработка рыбы." },
+        { id:22, title:"Яйцо аскариды (Ascaris lumbricoides)", taxonomy:"Ascarididae", question:"Характерная черта яйца аскариды", options:["Гладкая оболочка","Крупнобугристая толстая оболочка, коричневая","С крышечкой","С шипами"], correct:1, explanation:"Белковая бугристая оболочка.", lifecycle:"Миграция через лёгкие.", prevention:"Мытьё рук, овощей." },
+        { id:23, title:"Самец таёжного клеща (Ixodes persulcatus)", taxonomy:"Ixodidae", question:"Какую болезнь переносит таёжный клещ?", options:["Чуму","Клещевой энцефалит, боррелиоз","Малярию","Туляремию"], correct:1, explanation:"Переносчик вируса энцефалита.", lifecycle:"Яйцо → личинка → нимфа → имаго.", prevention:"Акарицидная одежда, прививка." },
+        { id:24, title:"Самка таёжного клеща", taxonomy:"Ixodes persulcatus", question:"Отличие самки от самца иксодового клеща", options:["Мельче самца","Спинной щиток покрывает только переднюю часть тела, крупнее","Имеет крылья","Короткие ноги"], correct:1, explanation:"Самка крупнее, щиток неполный.", lifecycle:"Трёххозяинный.", prevention:"Прививка от энцефалита." },
+        { id:25, title:"Нимфа таёжного клеща", taxonomy:"Ixodes persulcatus", question:"Сколько пар ног у нимфы?", options:["3 пары","4 пары","2 пары","5 пар"], correct:1, explanation:"Нимфа имеет 4 пары ног.", lifecycle:"Нимфа питается на животных.", prevention:"Осмотры после прогулок." },
+        { id:26, title:"Личинка таёжного клеща", taxonomy:"Ixodes persulcatus", question:"Сколько пар ног у личинки иксодового клеща?", options:["4 пары","3 пары","2 пары","6 пар"], correct:1, explanation:"Три пары ног.", lifecycle:"Питается на грызунах.", prevention:"Репелленты." },
+        { id:27, title:"Хелицеры и педипальпы клеща", taxonomy:"Ixodidae", question:"Что такое гипостома?", options:["Жгутик","Непарный вырост с зубцами для прикрепления","Хелицера","Пальпа"], correct:1, explanation:"Гипостома — зубчатый вырост.", lifecycle:"Ротовой аппарат.", prevention:"Удаление клеща пинцетом." },
+        { id:28, title:"Гамазовый клещ (Dermanyssidae)", taxonomy:"Parasitiformes", question:"Какие болезни переносят гамазовые клещи?", options:["Малярию","Крысиный сыпной тиф, лихорадка Ку","Энцефалит","Чуму"], correct:1, explanation:"Переносчики риккетсий.", lifecycle:"Яйцо → личинка → нимфа → имаго.", prevention:"Дезинсекция." },
+        { id:29, title:"Головка самки обыкновенного комара (Culex)", taxonomy:"Culicidae", question:"Как сидит самка Culex при кровососании?", options:["Вертикально","Параллельно поверхности или наклонив брюшко","На боку","Вниз головой"], correct:1, explanation:"Брюшко почти параллельно.", lifecycle:"Яйца склеены в плоты.", prevention:"Уничтожение личинок." },
+        { id:30, title:"Головка самца обыкновенного комара", taxonomy:"Culicidae", question:"Как отличить самца комара?", options:["Колюще-сосущий аппарат","Сильно опушенные антенны, длинные щупики","Тёмные крылья","Большой хоботок"], correct:1, explanation:"Перистые усики.", lifecycle:"Питаются нектаром.", prevention:"Не имеют значения." },
+        { id:31, title:"Личинка обыкновенного комара", taxonomy:"Culicidae", question:"Что такое дыхательный сифон у личинки комара?", options:["Жабра","Трубка на последнем сегменте","Хвостовая нить","Плавник"], correct:1, explanation:"Сифон для дыхания.", lifecycle:"Личинка дышит атмосферой.", prevention:"Гамбузия." },
+        { id:32, title:"Яйцо обыкновенного комара", taxonomy:"Culicidae", question:"Как выглядят яйца Culex в воде?", options:["Поодиночке с поплавками","Склеены в плоты, без воздушных камер","Цепочкой","Нитевидные"], correct:1, explanation:"Плотики яиц.", lifecycle:"Личинки через 2-3 дня.", prevention:"Осушение подвалов." },
+        { id:33, title:"Головка самки малярийного комара (Anopheles)", taxonomy:"Anopheles", question:"Поза малярийного комара при укусе", options:["Параллельно","Брюшко поднято вверх под углом","Боком","Спиной вниз"], correct:1, explanation:"Характерная «свечка».", lifecycle:"Переносчик малярии.", prevention:"Защита от укусов." },
+        { id:34, title:"Головка самца малярийного комара", taxonomy:"Anopheles", question:"Как выглядят щупики самца Anopheles?", options:["Тонкие нитевидные","Булавовидные утолщения на концах","Крючковатые","Короче хоботка"], correct:1, explanation:"Булавовидные утолщения.", lifecycle:"Не пьют кровь.", prevention:"Не переносчики." },
+        { id:35, title:"Личинка малярийного комара", taxonomy:"Anopheles", question:"Как личинка Anopheles держится у поверхности воды?", options:["Вниз головой","Горизонтально, параллельно, нет сифона","Вертикально","Извиваясь"], correct:1, explanation:"Дышит стигмами без сифона.", lifecycle:"Чистые водоёмы.", prevention:"Мелиорация." },
+        { id:36, title:"Яйцо малярийного комара", taxonomy:"Anopheles", question:"Отличительный признак яиц Anopheles", options:["Склеены","Поодиночке, имеют боковые воздушные камеры","С шипами","Круглые"], correct:1, explanation:"Плавательные камеры.", lifecycle:"Зимуют яйца.", prevention:"Биометоды." },
+        { id:37, title:"Москит (Phlebotomus)", taxonomy:"Phlebotomidae", question:"Какие болезни переносят москиты?", options:["Малярию","Лейшманиозы, москитная лихорадка","Энцефалит","Туляремию"], correct:1, explanation:"Лейшмании и вирус папатачи.", lifecycle:"Яйцо → 4 личинки → куколка.", prevention:"Борьба с грызунами." },
+        { id:38, title:"Вошь головная", taxonomy:"Pediculidae", question:"Какое заболевание переносят головные вши?", options:["Болезнь Лайма","Сыпной и возвратный тиф","Малярию","Чуму"], correct:1, explanation:"Риккетсии и боррелии.", lifecycle:"Гнида → нимфа → имаго.", prevention:"Личная гигиена." },
+        { id:39, title:"Вошь платяная", taxonomy:"Pediculidae", question:"Где обитает платяная вошь?", options:["В волосах","В одежде, белье","В подушках","На животных"], correct:1, explanation:"Складки одежды.", lifecycle:"Трансмиссивный переносчик.", prevention:"Стирка при 60°C." },
+        { id:40, title:"Блоха (Pulex irritans)", taxonomy:"Pulicidae", question:"Какой механизм передачи чумы?", options:["Воздушно-капельный","Трансмиссивный через блох","Фекально-оральный","Контактный"], correct:1, explanation:"Блохи — переносчики чумы.", lifecycle:"Яйцо → личинка → куколка → имаго.", prevention:"Дератизация." },
+        { id:41, title:"Постельный клоп (Cimex lectularius)", taxonomy:"Cimicidae", question:"Почему клопы редко переносят болезни?", options:["Короткий хоботок","Не испражняются во время кровососания","Живут в домах","Быстро погибают"], correct:1, explanation:"Возбудители не попадают в ранку.", lifecycle:"Личинка 5 возрастов.", prevention:"Дезинсекция." },
+        { id:42, title:"Ротовой аппарат комнатной мухи", taxonomy:"Muscidae", question:"Как муха ест твёрдую пищу?", options:["Разгрызает","Смачивает слюной и фильтрует","Всасывает целиком","Не ест"], correct:1, explanation:"Разжижение слюной.", lifecycle:"Яйцо → личинка → куколка.", prevention:"Санитария, сетки." },
+        { id:43, title:"Лапка комнатной мухи", taxonomy:"Muscidae", question:"Что помогает мухе переносить возбудителей?", options:["Крылья","Щетинки, коготки, присоски","Глаза","Хоботок"], correct:1, explanation:"Микробы на лапках.", lifecycle:"Механический переносчик.", prevention:"Уничтожение свалок." },
+        { id:44, title:"Трипаносома (Trypanosoma brucei)", taxonomy:"Trypanosomatidae", question:"Как передаётся американский трипаносомоз (болезнь Чагаса)?", options:["Укус мухи цеце","Через фекалии триатомовых клопов","Контактно","Воздушно"], correct:1, explanation:"Клопы испражняются на кожу.", lifecycle:"Эпимастиготы в кишечнике клопа.", prevention:"Защита от клопов." },
+        { id:45, title:"Малярийный плазмодий (Plasmodium vivax)", taxonomy:"Plasmodiidae", question:"В какой клетке крови происходит шизогония у плазмодия?", options:["Лейкоциты","Эритроциты","Гепатоциты","Тромбоциты"], correct:1, explanation:"Бесполое размножение в эритроцитах.", lifecycle:"Комар Anopheles — окончательный хозяин.", prevention:"Защита от комаров." }
+    ];
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function updateStats() {
+        let answered = 0;
+        for (let i = 0; i < parasitesData.length; i++) {
+            if (sessionStorage.getItem(`answer_${parasitesData[i].id}`) !== null) answered++;
+        }
+        const progressText = document.getElementById('progress-text');
+        if (progressText) progressText.innerText = `📊 Пройдено: ${answered} из ${parasitesData.length}`;
+    }
+
+    function renderAllCards() {
+        const container = document.getElementById('quiz-container');
+        if (!container) return;
+        let html = '';
+        for (let i = 0; i < parasitesData.length; i++) {
+            const p = parasitesData[i];
+            const radioName = `q_${p.id}`;
+            const saved = sessionStorage.getItem(`answer_${p.id}`);
+            let userChoice = (saved !== null && !isNaN(parseInt(saved))) ? parseInt(saved) : null;
+
+            let optionsHtml = '';
+            for (let optIdx = 0; optIdx < p.options.length; optIdx++) {
+                const isChecked = (userChoice === optIdx) ? 'checked' : '';
+                optionsHtml += `
+                    <label class="option" data-qid="${p.id}" data-opt="${optIdx}">
+                        <input type="radio" name="${radioName}" value="${optIdx}" ${isChecked}>
+                        <span class="option-text">${escapeHtml(p.options[optIdx])}</span>
+                    </label>
+                `;
+            }
+
+            let feedbackBlock = '';
+            if (userChoice !== null) {
+                const isCorrect = (userChoice === p.correct);
+                const correctText = escapeHtml(p.options[p.correct]);
+                feedbackBlock = `
+                    <div class="feedback ${isCorrect ? 'correct-feedback' : 'wrong-feedback'}">
+                        <strong>${isCorrect ? '✓ Верно' : '✗ Неверно'}</strong><br>
+                        ${!isCorrect ? `Правильный ответ: ${correctText}.<br>` : ''}
+                        ${escapeHtml(p.explanation)}
+                    </div>
+                    <div class="info-block">
+                        <div class="info-title">🔄 Цикл развития</div>
+                        <div>${escapeHtml(p.lifecycle)}</div>
+                        <hr>
+                        <div class="info-title">🛡️ Меры профилактики</div>
+                        <div>${escapeHtml(p.prevention)}</div>
+                    </div>
+                `;
+            } else {
+                feedbackBlock = `<div class="feedback">🔍 Выберите вариант и нажмите «Проверить».</div>`;
+            }
+
+            html += `
+                <div class="quiz-card" id="card-${p.id}">
+                    <div class="card-header">
+                        <h2>
+                            <span>${escapeHtml(p.title)}</span>
+                            <span class="taxonomy">${escapeHtml(p.taxonomy)}</span>
+                        </h2>
+                    </div>
+                    <div class="question-area">
+                        <div class="question-text">❓ ${escapeHtml(p.question)}</div>
+                        <div class="options" data-group="${radioName}">
+                            ${optionsHtml}
+                        </div>
+                        <button class="btn-submit" data-qid="${p.id}">✅ Проверить ответ</button>
+                        <div class="feedback-area" id="feedback-${p.id}">
+                            ${feedbackBlock}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+
+        document.querySelectorAll('.btn-submit').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const qid = parseInt(btn.getAttribute('data-qid'));
+                const parasite = parasitesData.find(p => p.id === qid);
+                if (!parasite) return;
+                const radioName = `q_${qid}`;
+                const selectedRadio = document.querySelector(`input[name="${radioName}"]:checked`);
+                if (!selectedRadio) {
+                    const fbDiv = document.getElementById(`feedback-${qid}`);
+                    if (fbDiv) fbDiv.innerHTML = `<div class="feedback wrong-feedback">⚠️ Выберите ответ.</div>`;
+                    return;
+                }
+                const selectedVal = parseInt(selectedRadio.value);
+                sessionStorage.setItem(`answer_${qid}`, selectedVal);
+                renderAllCards();
+                updateStats();
+                document.getElementById(`card-${qid}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        });
+
+        document.querySelectorAll('.option').forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                const radio = opt.querySelector('input[type="radio"]');
+                if (radio && e.target.tagName !== 'INPUT') radio.checked = true;
+            });
+        });
+
+        updateStats();
+    }
+
+    document.getElementById('reset-btn')?.addEventListener('click', () => {
+        for (let i = 0; i < parasitesData.length; i++) {
+            sessionStorage.removeItem(`answer_${parasitesData[i].id}`);
+        }
+        renderAllCards();
+    });
+
+    renderAllCards();
+</script>
+</body>
+</html>
